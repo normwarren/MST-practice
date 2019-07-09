@@ -1,26 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { observer } from "mobx-react";
+import Item from "./Item";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends Component {
+  render() {
+    const { invoice } = this.props;
+
+    return (
+      <div className="App">
+        <h1>{invoice.status()}</h1>
+        {!invoice.is_paid && <button onClick={invoice.markPaid}>Pay</button>}
+        <form
+          className="myForm"
+          onSubmit={e => {
+            e.preventDefault();
+            invoice.itemList.add({
+              item: this.nameInput.value,
+              priority: this.priInput.value,
+              status: this.statusInput.value
+            });
+            e.target.reset();
+            this.nameInput.focus();
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          <label htmlFor="">
+            ToDo Item
+            <input
+              type="text"
+              ref={input => (this.nameInput = input)}
+              id="name"
+            />
+          </label>
+          <label htmlFor="">
+            Priority A-C
+            <input
+              type="text"
+              ref={input => (this.priInput = input)}
+              id="priority"
+            />
+          </label>
+          <label htmlFor="">
+            Notes - Status
+            <input
+              type="text"
+              ref={input => (this.statusInput = input)}
+              id="status"
+            />
+          </label>
+          <button className="button" type="submit">
+            Add
+          </button>
+        </form>
+        <ul>
+          {invoice.itemList.items.map((item, i) => (
+            <Item item={item} key={i} />
+          ))}
+        </ul>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default observer(App);

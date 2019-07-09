@@ -1,12 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import Invoice from "./models/Invoice";
+import { onPatch } from "mobx-state-tree";
+import makeInspectable from "mobx-devtools-mst";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+const invoice = Invoice.create({ currency: "CAD" });
+
+//debugging for mobx-state-tree
+onPatch(invoice, patch => {
+  console.log(patch);
+});
+makeInspectable(invoice);
+
+ReactDOM.render(<App invoice={invoice} />, document.getElementById("root"));
 serviceWorker.unregister();
