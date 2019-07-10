@@ -9,7 +9,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>{invoice.status()}</h1>
+        <h1>{invoice.getStatus()}</h1>
         {!invoice.is_paid && <button onClick={invoice.markPaid}>Pay</button>}
         <form
           className="myForm"
@@ -17,7 +17,7 @@ class App extends Component {
             e.preventDefault();
             invoice.itemList.add({
               item: this.nameInput.value,
-              priority: this.priInput.value,
+              priority: parseInt(this.priInput.value),
               status: this.statusInput.value
             });
             e.target.reset();
@@ -33,7 +33,7 @@ class App extends Component {
             />
           </label>
           <label htmlFor="">
-            Priority A-C
+            Priority 1-3
             <input
               type="text"
               ref={input => (this.priInput = input)}
